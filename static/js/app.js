@@ -25,7 +25,7 @@ function createAll(name) {
     //options.text(function(d) { return d; }); // have to have a function here because d3 expects a function as an argument
 
     createBar(name);
-
+    createBubble(name);
   });
 }
 
@@ -38,13 +38,58 @@ function createBar(name){
     console.log(currentBelly);
 
     let trace = {
-      x: currentBelly.otu_ids,
-      y: currentBelly.sample_values,
+      x: currentBelly.sample_values.slice(0,10).reverse(),
+      y: currentBelly.otu_ids.slice(0,10).map(id => `OTU ${id}`).reverse(),
       type: "bar",
       name: "bar",
-      text: currentBelly.otu_labels,
-      hoverinfo: 'text'
+      text: currentBelly.otu_labels.slice(0,10).reverse(),
+      hoverinfo: 'text',
+      orientation: "h"
     };
+
+    let s = [trace];
+
+    Plotly.newPlot("bar", s);
+
+  });
+}
+
+
+
+// Create a bubble chart that displays each sample.
+
+// Use otu_ids for the x values.
+
+// Use sample_values for the y values.
+
+// Use sample_values for the marker size.
+
+// Use otu_ids for the marker colors.
+
+// Use otu_labels for the text values.
+function createBubble(name){
+  d3.json(url).then((data) => {
+    
+    let currentBelly = data.samples.find(sample => sample.id === name);
+
+    let trace = {
+      x: currentBelly.otu_ids,
+      y: currentBelly.sample_values,
+      type: "scatter",
+      name: "bubble",
+      text: currentBelly.otu_labels,
+      hoverinfo: 'text',
+      mode: 'markers',
+      marker: {
+        size: currentBelly.sample_values.map(value => value / 2),
+        color: currentBelly.sample_values,
+        colorscale: 'Rainbow'
+      },
+    };
+
+    let s = [trace];
+
+    Plotly.newPlot("bubble", s);
 
   });
 }

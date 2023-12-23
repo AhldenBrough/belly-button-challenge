@@ -95,7 +95,7 @@ function createGauge(currentMetadata){
     value: currentMetadata.wfreq,
     gauge: {
       axis: { range: [0, 9], tickwidth: 1, tickcolor: "darkblue" },
-      bar: { color: "red" },
+      bar: { color: "purple" },
       steps: [
         { range: [0, 1], color: "rgba(255, 0, 0, 0.7)", label: "0-1", text: "Step 1" },
         { range: [1, 2], color: "rgba(255, 165, 0, 0.7)", label: "1-2", text: "Step 2" },
@@ -107,13 +107,14 @@ function createGauge(currentMetadata){
         { range: [7, 8], color: "rgba(255, 20, 147, 0.7)", label: "7-8", text: "Step 8" },
         { range: [8, 9], color: "rgba(173, 216, 230, 0.7)", label: "8-9", text: "Step 9" },
       ],
+      threshold: {
+        line: { color: "black", width: 2 },
+        thickness: 0.75,
+        value: currentMetadata.wfreq
+      }
     },
     
-    threshold: {
-      line: { color: "red", width: 8 },
-      thickness: 0.75,
-      value: currentMetadata.wfreq
-    }
+    
   }
 
   let s = [trace];

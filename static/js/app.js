@@ -75,6 +75,7 @@ function createBubble(currentBelly){
 
 function createDemographicInfo(currentMetadata){
   let info = d3.select('#sample-metadata');
+  info.selectAll("p").remove();
   console.log(currentMetadata);
 
   for (let key in currentMetadata) {

@@ -21,22 +21,18 @@ function createAll(name) {
       .append('option')
       .text(function(d) { return 'Belly ' + d; });  // have to have a function here because d3 expects a function as an argument
 
-    // Update existing options with new data
-    //options.text(function(d) { return d; }); // have to have a function here because d3 expects a function as an argument
+    // in data.samples, for each sample check if the id is equal to name, if so return that specific sample
+    let currentBelly = data.samples.find(sample => sample.id === name);
+    let currentMetadata = data.metadata.find(sample => sample.id === parseInt(name));
 
-    createBar(name);
-    createBubble(name);
+    createBar(name, currentBelly);
+    createBubble(name, currentBelly);
+    createDemographicInfo(name, currentMetadata);
   });
 }
 
-function createBar(name){
-  
-  d3.json(url).then((data) => {
-  
-    // in data.samples, for each sample check if the id is equal to name, if so return that specific sample
-    let currentBelly = data.samples.find(sample => sample.id === name); 
-    console.log(currentBelly);
-
+function createBar(name, currentBelly){
+    
     let trace = {
       x: currentBelly.sample_values.slice(0,10).reverse(),
       y: currentBelly.otu_ids.slice(0,10).map(id => `OTU ${id}`).reverse(),
@@ -51,27 +47,10 @@ function createBar(name){
 
     Plotly.newPlot("bar", s);
 
-  });
 }
 
-
-
-// Create a bubble chart that displays each sample.
-
-// Use otu_ids for the x values.
-
-// Use sample_values for the y values.
-
-// Use sample_values for the marker size.
-
-// Use otu_ids for the marker colors.
-
-// Use otu_labels for the text values.
-function createBubble(name){
-  d3.json(url).then((data) => {
+function createBubble(name, currentBelly){
     
-    let currentBelly = data.samples.find(sample => sample.id === name);
-
     let trace = {
       x: currentBelly.otu_ids,
       y: currentBelly.sample_values,
@@ -91,10 +70,17 @@ function createBubble(name){
 
     Plotly.newPlot("bubble", s);
 
-  });
 }
 
+function createDemographicInfo(name, currentMetadata){
+  let ul = d3.select('#sample-metadata');
+  console.log(currentMetadata);
 
+  for (let key in currentMetadata) {
+    if (currentMetadata.hasOwnProperty(key)) {
+      ul.append('p').text(`${key}: ${currentMetadata[key]}\n`);
+    }
+  }
+}
 
 createAll(start_id);
-
